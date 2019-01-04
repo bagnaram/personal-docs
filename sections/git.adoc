@@ -1,0 +1,224 @@
+== Git related things
+
+=== Squashing commits
+You have a lot of commits like in the example below:
+```
+Remove image-inspector RPM from base and use the docker image instead.
+dc024ff
+mbagnara
+remove epel from base image dependency
+1e0b07b
+mbagnara
+JQ binary installation
+00f38ca
+mbagnara
+fix wget to curl in dockerfile
+09ab3fa
+mbagnara
+add redirect for jq install
+8966337
+mbagnara
+added a hack to get latest version of the image-inspector
+39e0d40
+root
+parameterized OCP_VERSION
+6b56843
+root
+change ARG to ENV since we arent really referencing images here
+3744570
+root
+comment the arg and try removing it
+2d878e8
+root
+type
+1794f6b
+root
+test
+fc843e7
+root
+test
+94c8e1c
+root
+replace the git repository names to point to redhat-cop
+106e439
+root
+Parameterize the OCP release version in the Dockerfiles
+7537e37
+root
+Merge branch 'master' of https://github.com/bagnaram/image-scanning-s…
+```
+
+You would like to squash them into a single commit but you already have a PR created with these separate commits. You can still squash them locally and push.
+
+1. View Git log.
+```
+$ git log --oneline
+893a17f Merge branch 'master' of https://github.com/bagnaram/image-scanning-signing-service
+83e0889 Remove image-inspector RPM from base and use the docker image instead.
+a737829 remove verbose from the scan-image script
+bb9ec2b add missing params file
+5ac4dcf fixed the typo update message
+671f264 Added rhel7 back into imagestreams Removed --openscap-html-report to address https://github.com/op
+8e0c67d Merge branch 'master' of https://github.com/bagnaram/image-scanning-signing-service
+7537e37 Parameterize the OCP release version in the Dockerfiles Rename the git repository to point to redh
+106e439 replace the git repository names to point to redhat-cop
+94c8e1c test
+fc843e7 test
+1794f6b type
+2d878e8 comment the arg and try removing it
+3744570 change ARG to ENV since we arent really referencing images here
+6b56843 parameterized OCP_VERSION
+39e0d40 added a hack to get latest version of the image-inspector
+8966337 add redirect for jq install
+09ab3fa fix wget to curl in dockerfile
+00f38ca JQ binary installation
+1e0b07b remove epel from base image dependency
+dc024ff Remove image-inspector RPM from base and use the docker image instead.
+bb96598 Added license
+```
+
+2. You want to select the commit hash that you would like things to be squashed into. In this case `bb96598`. Everything above it will squash into a single commit.
+```
+$ git rebase -i bb96598
+```
+
+3. You will enter an interactive tool to manage each commit in the rebase.
+```
+pick 893a17f Merge branch 'master' of https://github.com/bagnaram/image-scanning-signing-service
+pick 83e0889 Remove image-inspector RPM from base and use the docker image instead.
+pick a737829 remove verbose from the scan-image script
+pick bb9ec2b add missing params file
+pick 5ac4dcf fixed the typo update message
+pick 671f264 Added rhel7 back into imagestreams Removed --openscap-html-report to address https://github.com/op8e0c67d Merge branch 'master' of https://github.com/bagnaram/image-scanning-signing-service
+pick 7537e37 Parameterize the OCP release version in the Dockerfiles Rename the git repository to point to redh
+pick 106e439 replace the git repository names to point to redhat-cop
+pick 94c8e1c test
+pick fc843e7 test
+pick 1794f6b type
+pick 2d878e8 comment the arg and try removing it
+pick 3744570 change ARG to ENV since we arent really referencing images here
+pick 6b56843 parameterized OCP_VERSION
+pick 39e0d40 added a hack to get latest version of the image-inspector
+pick 8966337 add redirect for jq install
+pick 09ab3fa fix wget to curl in dockerfile
+pick 00f38ca JQ binary installation
+pick 1e0b07b remove epel from base image dependency
+pick dc024ff Remove image-inspector RPM from base and use the docker image instead.
+
+# Rebase 893a17f..dc024ff onto bb96598 (       20 TODO item(s))
+#
+# Commands:
+# p, pick = use commit
+# r, reword = use commit, but edit the commit message
+# e, edit = use commit, but stop for amending
+# s, squash = use commit, but meld into previous commit
+# f, fixup = like "squash", but discard this commit's log message
+# x, exec = run command (the rest of the line) using shell
+#
+# These lines can be re-ordered; they are executed from top to bottom.
+#
+# If you remove a line here THAT COMMIT WILL BE LOST.
+#
+# However, if you remove everything, the rebase will be aborted.
+#
+# Note that empty commits are commented out
+```
+
+4. Modify each commit to squash, leaving the topmost one as the commit message:
+```
+pick 893a17f Merge branch 'master' of https://github.com/bagnaram/image-scanning-signing-service
+squash 83e0889 Remove image-inspector RPM from base and use the docker image instead.
+squash a737829 remove verbose from the scan-image script
+squash bb9ec2b add missing params file
+squash 5ac4dcf fixed the typo update message
+squash 671f264 Added rhel7 back into imagestreams Removed --openscap-html-report to address https://github.com/op8e0c67d Merge branch 'master' of https://github.com/bagnaram/image-scanning-signing-service
+squash 7537e37 Parameterize the OCP release version in the Dockerfiles Rename the git repository to point to redh
+squash 106e439 replace the git repository names to point to redhat-cop
+squash 94c8e1c test
+squash fc843e7 test
+squash 1794f6b type
+squash 2d878e8 comment the arg and try removing it
+squash 3744570 change ARG to ENV since we arent really referencing images here
+squash 6b56843 parameterized OCP_VERSION
+squash 39e0d40 added a hack to get latest version of the image-inspector
+squash 8966337 add redirect for jq install
+squash 09ab3fa fix wget to curl in dockerfile
+squash 00f38ca JQ binary installation
+squash 1e0b07b remove epel from base image dependency
+squash dc024ff Remove image-inspector RPM from base and use the docker image instead.
+
+# Rebase 893a17f..dc024ff onto bb96598 (       20 TODO item(s))
+#
+# Commands:
+# p, pick = use commit
+# r, reword = use commit, but edit the commit message
+# e, edit = use commit, but stop for amending
+# s, squash = use commit, but meld into previous commit
+# f, fixup = like "squash", but discard this commit's log message
+# x, exec = run command (the rest of the line) using shell
+#
+# These lines can be re-ordered; they are executed from top to bottom.
+#
+# If you remove a line here THAT COMMIT WILL BE LOST.
+#
+# However, if you remove everything, the rebase will be aborted.
+#
+# Note that empty commits are commented out
+```
+
+5. You will likely have conflicts in the rebase process if there were any regressions.
+```
+error: could not apply 671f264... Added rhel7 back into imagestreams
+
+When you have resolved this problem, run "git rebase --continue".
+If you prefer to skip this patch, run "git rebase --skip" instead.
+To check out the original branch and stop rebasing, run "git rebase --abort".
+
+Could not apply 671f264... Added rhel7 back into imagestreams Removed --openscap-html-report to address https://github.com/openshift/image-inspector/issues/105 Fixed bug in imagestream instead of direct Docker image
+```
+
+Run `git status` to see what file the conflict appears in.
+```
+# HEAD detached from bb96598
+# You are currently rebasing branch 'master' on 'bb96598'.
+#   (fix conflicts and then run "git rebase --continue")
+#   (use "git rebase --skip" to skip this patch)
+#   (use "git rebase --abort" to check out the original branch)
+#
+# Unmerged paths:
+#   (use "git reset HEAD <file>..." to unstage)
+#   (use "git add <file>..." to mark resolution)
+#
+#	both modified:      images/image-sign-scan-base/Dockerfile
+#
+```
+
+Edit the Unmerged paths file. In this case: `images/image-sign-scan-base/Dockerfile` Fix the file and save.
+
+Run `git rebase --continue` until all the changes merge.
+
+6. Commit to origin
+```
+$ git push -u origin master
+```
+
+7. And now your repository will show as this:
+```
+83e0889 Remove image-inspector RPM from base and use the docker image instead.
+bb96598 Added license
+adf35ba Updated references to the OpenShift applier
+98aa202 README updates
+ce76e78 Integrating of image scanning
+1fdfc97 Migration to Operator Framework
+7624e5e Updated source in README
+acfe97c Support for providing custom secrets
+72f76d1 Added support for conditions in status
+9a2eed7 Migrated to using ImageStreamTag resource
+1e01be1 CI Pipeline Demonstration
+22bbe68 Fixed formatting
+b0f8cb1 Added README
+9e356e8 Added remaining initial set of content
+516f6a4 Initial code commit
+731eb30 Initial Commit
+```
+
