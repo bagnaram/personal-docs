@@ -2,4 +2,7 @@
 A repository of useful things I want to remember.
 
 == Git
-include::sections/git.adoc[]
+include::./sections/git.adoc[]
+
+== SOCKS proxy
+include::./sections/socks.adoc[]
