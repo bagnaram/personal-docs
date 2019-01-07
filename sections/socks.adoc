@@ -1,0 +1,20 @@
+== Creating a SOCKS proxy for DNS
+
+https://ma.ttias.be/socks-proxy-linux-ssh-bypass-content-filters/
+
+1. Create SSH Tunnel
+You can pick any port, in this case using 1337
+```
+ssh -D 1337 -q -C -N user@proxyserver.example.com
+```
+Once you run that, ssh will stay in the foreground until you CTRL+C it. 
+
+
+3. Configure Mozilla to use the SOCKS tunnel
+
+In Firefox, go to Preferences > Advanced > Network and find the Connection settings. Change them as such:
+
+a. SOCKS host:  localhost:1337
+b. Proxy DNS when using SOCKS
+
+Your DNS should forward through the SOCKS host and you can now get into your environment.
