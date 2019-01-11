@@ -2,7 +2,6 @@
 
 === Pulling and updating Submodules
 
-
 To fetch the submodules:
 ----
 git submodule update --init --recursive
@@ -14,10 +13,10 @@ and now proceed updating them to latest master branch (for example):
 git submodule foreach git pull origin master
 ----
 
+Used from https://stackoverflow.com/questions/5828324/update-git-submodule-to-latest-commit-on-origin
 
-
-You have a project with a bunch of existing submodules and want to refresh the 
 === Squashing commits
+
 You have a lot of commits like in the example below:
 
 https://stackoverflow.com/questions/31668794/squash-all-your-commits-in-one-before-a-pull-request-in-github
