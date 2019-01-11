@@ -1,8 +1,27 @@
 == Git related things
 
+=== Pulling and updating Submodules
+
+
+To fetch the submodules:
+----
+git submodule update --init --recursive
+----
+
+and now proceed updating them to latest master branch (for example):
+
+----
+git submodule foreach git pull origin master
+----
+
+
+
+You have a project with a bunch of existing submodules and want to refresh the 
 === Squashing commits
 You have a lot of commits like in the example below:
-```
+
+https://stackoverflow.com/questions/31668794/squash-all-your-commits-in-one-before-a-pull-request-in-github
+----
 Remove image-inspector RPM from base and use the docker image instead.
 dc024ff
 mbagnara
@@ -46,12 +65,13 @@ Parameterize the OCP release version in the Dockerfiles
 7537e37
 root
 Merge branch 'master' of https://github.com/bagnaram/image-scanning-s…
-```
+----
 
 You would like to squash them into a single commit but you already have a PR created with these separate commits. You can still squash them locally and push.
 
 1. View Git log.
-```
+
+----
 $ git log --oneline
 893a17f Merge branch 'master' of https://github.com/bagnaram/image-scanning-signing-service
 83e0889 Remove image-inspector RPM from base and use the docker image instead.
@@ -75,15 +95,15 @@ fc843e7 test
 1e0b07b remove epel from base image dependency
 dc024ff Remove image-inspector RPM from base and use the docker image instead.
 bb96598 Added license
-```
+----
 
 2. You want to select the commit hash that you would like things to be squashed into. In this case `bb96598`. Everything above it will squash into a single commit.
-```
+----
 $ git rebase -i bb96598
-```
+----
 
 3. You will enter an interactive tool to manage each commit in the rebase.
-```
+----
 pick 893a17f Merge branch 'master' of https://github.com/bagnaram/image-scanning-signing-service
 pick 83e0889 Remove image-inspector RPM from base and use the docker image instead.
 pick a737829 remove verbose from the scan-image script
@@ -122,10 +142,10 @@ pick dc024ff Remove image-inspector RPM from base and use the docker image inste
 # However, if you remove everything, the rebase will be aborted.
 #
 # Note that empty commits are commented out
-```
+----
 
 4. Modify each commit to squash, leaving the topmost one as the commit message:
-```
+----
 pick 893a17f Merge branch 'master' of https://github.com/bagnaram/image-scanning-signing-service
 squash 83e0889 Remove image-inspector RPM from base and use the docker image instead.
 squash a737829 remove verbose from the scan-image script
@@ -164,10 +184,10 @@ squash dc024ff Remove image-inspector RPM from base and use the docker image ins
 # However, if you remove everything, the rebase will be aborted.
 #
 # Note that empty commits are commented out
-```
+----
 
 5. You will likely have conflicts in the rebase process if there were any regressions.
-```
+----
 error: could not apply 671f264... Added rhel7 back into imagestreams
 
 When you have resolved this problem, run "git rebase --continue".
@@ -175,10 +195,10 @@ If you prefer to skip this patch, run "git rebase --skip" instead.
 To check out the original branch and stop rebasing, run "git rebase --abort".
 
 Could not apply 671f264... Added rhel7 back into imagestreams Removed --openscap-html-report to address https://github.com/openshift/image-inspector/issues/105 Fixed bug in imagestream instead of direct Docker image
-```
+----
 
 Run `git status` to see what file the conflict appears in.
-```
+----
 # HEAD detached from bb96598
 # You are currently rebasing branch 'master' on 'bb96598'.
 #   (fix conflicts and then run "git rebase --continue")
@@ -191,19 +211,19 @@ Run `git status` to see what file the conflict appears in.
 #
 #	both modified:      images/image-sign-scan-base/Dockerfile
 #
-```
+----
 
 Edit the Unmerged paths file. In this case: `images/image-sign-scan-base/Dockerfile` Fix the file and save.
 
 Run `git rebase --continue` until all the changes merge.
 
 6. Commit to origin
-```
+----
 $ git push -u origin master
-```
+----
 
 7. And now your repository will show as this:
-```
+----
 83e0889 Remove image-inspector RPM from base and use the docker image instead.
 bb96598 Added license
 adf35ba Updated references to the OpenShift applier
@@ -220,5 +240,5 @@ b0f8cb1 Added README
 9e356e8 Added remaining initial set of content
 516f6a4 Initial code commit
 731eb30 Initial Commit
-```
+----
 
